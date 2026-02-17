@@ -23,6 +23,9 @@ export default function Fases() {
             Construa a muralha principal na área marcada. Priorize blocos comuns em tema medieval.
           </p>
           <p className="mt-3 text-sm text-slate-300">
+            É obrigatório manter o estilo de construção da temporada e colocar uma torre de controle em cada uma das 4 pontas da muralha.
+          </p>
+          <p className="mt-3 text-sm text-slate-300">
             Blocos proibidos para muralha global: terra, pedregulho e madeiras.
           </p>
           <p className="mt-3 text-sm font-semibold text-amber-200">PVP desativado</p>

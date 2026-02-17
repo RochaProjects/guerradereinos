@@ -50,6 +50,12 @@ export default function Regras() {
       descricao:
         "Toda denúncia precisa de print ou vídeo com horário aproximado. Encaminhe no Discord para validação da staff.",
     },
+    {
+      numero: "Artigo 9",
+      titulo: "Estilo de Construção das Muralhas",
+      descricao:
+        "As construções de muralha devem seguir o estilo definido da temporada. É obrigatório ter uma torre de controle em cada uma das 4 pontas da muralha.",
+    },
   ];
 
   return (
