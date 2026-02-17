@@ -3,9 +3,9 @@ import WikiLayout from "@/components/WikiLayout";
 const commandGroups = [
   {
     title: "Pedidos de Teleporte",
-    commands: ["/tpa <jogador>", "/tpaccept [jogador]", "/tpdeny [jogador]", "/aceitar [jogador]", "/negar [jogador]"],
+    commands: ["/tpa <jogador>", "/aceitar", "/negar"],
     description:
-      "Se houver apenas um pedido pendente, /aceitar ou /negar já funciona sem nome. Entre reinos diferentes, TPA continua proibido.",
+      "No servidor em PT-BR, os comandos de resposta sao /aceitar e /negar. Entre reinos diferentes, TPA continua proibido.",
   },
   {
     title: "Retorno e Kit",
