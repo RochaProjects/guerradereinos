@@ -30,7 +30,7 @@ export default function Regras() {
       numero: "Artigo 5",
       titulo: "Nether e The End",
       descricao:
-        "Pode haver janelas de PVP livre no Nether e no The End. A staff não oferece suporte para ataques via Nether e é proibido acampar no spawn do portal de reino.",
+        "PVP é permitido no Nether e no The End. Atenção: confira os avisos no Discord, pois pode haver ajuste temporário de liberação. A staff não oferece suporte para ataques via Nether e é proibido acampar no spawn do portal de reino.",
     },
     {
       numero: "Artigo 6",

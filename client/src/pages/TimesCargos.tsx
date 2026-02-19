@@ -2,9 +2,9 @@ import WikiLayout from "@/components/WikiLayout";
 
 const cargos = [
   {
-    nome: "Membro de Reino",
+    nome: "Time",
     status: "Ativo",
-    descricao: "Jogador padrão vinculado a Solaris ou Lunar.",
+    descricao: "Jogador do time Solaris ou Lunar.",
   },
   {
     nome: "Sem Time",
@@ -13,23 +13,23 @@ const cargos = [
   },
   {
     nome: "Invocador",
-    status: "Em breve",
-    descricao: "Cargo especial previsto para próximas temporadas.",
+    status: "Ativo",
+    descricao: "5 convites válidos rendem 5 dias de Invocador.",
   },
   {
     nome: "Jogadores VIP",
-    status: "Em breve",
+    status: "Ativo",
     descricao: "Área VIP planejada para o wiki e para benefícios específicos.",
   },
   {
-    nome: "Streamer",
+    nome: "Lives",
     status: "Ativo",
-    descricao: "Categoria para criadores ao vivo que participam da temporada.",
+    descricao: "Cargo para criadores ao vivo que participam da temporada.",
   },
   {
-    nome: "YouTube",
-    status: "Em breve",
-    descricao: "Categoria para criadores de conteúdo em vídeo.",
+    nome: "Redes Sociais",
+    status: "Ativo",
+    descricao: "Cargo para criadores de conteúdo em plataformas sociais.",
   },
 ];
 

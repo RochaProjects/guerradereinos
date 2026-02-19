@@ -23,6 +23,14 @@ type Kit = {
   itens: string[];
 };
 
+type SingleProduct = {
+  id: string;
+  nome: string;
+  preco: string;
+  discordUrl: string;
+  itemId: string;
+};
+
 const BASE_URL = import.meta.env.BASE_URL;
 const DISCORD_LOJA_URL = "https://discord.com/channels/1467346816403243233/1467562728108458140";
 const BOOK_ICON = `${BASE_URL}store/Enchanted_Book.png`;
@@ -48,6 +56,17 @@ const storeItems: StoreItem[] = [
     encantamentos: [
       { nome: "Eficiência Instantânea", nivel: "∞" },
       { nome: "Fortune", nivel: "III" },
+      { nome: "Indestrutível", nivel: "∞" },
+    ],
+  },
+  {
+    id: "picaretadima_toque_seda",
+    nome: "Picareta de Diamante",
+    descricao: "Versão para compra única focada em mineração com toque de seda.",
+    imagem: `${BASE_URL}store/picaretadima.webp`,
+    encantamentos: [
+      { nome: "Eficiência Instantânea", nivel: "∞" },
+      { nome: "Toque de Seda", nivel: "I" },
       { nome: "Indestrutível", nivel: "∞" },
     ],
   },
@@ -174,24 +193,61 @@ const kits: Kit[] = [
       "boots_soberano",
     ],
   },
+  {
+    id: "invocador",
+    nome: "Kit Invocador",
+    preco: "Grátis",
+    icone: `${BASE_URL}store/invocador.png`,
+    discordUrl: DISCORD_LOJA_URL,
+    itens: ["espadadima", "picaretadima", "machadodima", "padima"],
+  },
 ];
+
+const singleProducts: SingleProduct[] = [
+  {
+    id: "produto_picareta_toque_seda",
+    nome: "Picareta de Diamante (Toque de Seda)",
+    preco: "R$0,50",
+    discordUrl: DISCORD_LOJA_URL,
+    itemId: "picaretadima_toque_seda",
+  },
+];
+
+function formatCardProductName(name: string) {
+  const splitIndex = name.indexOf("(");
+  if (splitIndex === -1) {
+    return name;
+  }
+
+  return `${name.slice(0, splitIndex).trim()}\n${name.slice(splitIndex).trim()}`;
+}
 
 export default function Loja() {
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
   const [selectedKitId, setSelectedKitId] = useState<string | null>(null);
+  const [selectedSingleProductId, setSelectedSingleProductId] = useState<string | null>(null);
+  const [showInvocadorInfo, setShowInvocadorInfo] = useState(false);
 
   const itemMap = useMemo(
     () => new Map(storeItems.map((item) => [item.id, item])),
     [],
   );
   const kitMap = useMemo(() => new Map(kits.map((kit) => [kit.id, kit])), []);
+  const singleProductMap = useMemo(
+    () => new Map(singleProducts.map((product) => [product.id, product])),
+    [],
+  );
 
   const selectedItem = selectedItemId ? itemMap.get(selectedItemId) : undefined;
   const selectedKit = selectedKitId ? kitMap.get(selectedKitId) : undefined;
+  const selectedSingleProduct = selectedSingleProductId ? singleProductMap.get(selectedSingleProductId) : undefined;
+  const selectedSingleItem = selectedSingleProduct ? itemMap.get(selectedSingleProduct.itemId) : undefined;
 
   const closeModal = () => {
     setSelectedItemId(null);
     setSelectedKitId(null);
+    setSelectedSingleProductId(null);
+    setShowInvocadorInfo(false);
   };
 
   return (
@@ -218,9 +274,19 @@ export default function Loja() {
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <span className="rounded-full border border-emerald-400/40 bg-emerald-500/10 px-4 py-2 text-sm font-semibold text-emerald-200">
-                  {kit.preco}
-                </span>
+                {kit.id === "invocador" ? (
+                  <button
+                    type="button"
+                    onClick={() => setShowInvocadorInfo(true)}
+                    className="rounded-full border border-emerald-400/40 bg-emerald-500/10 px-4 py-2 text-sm font-semibold text-emerald-200 transition hover:bg-emerald-500/20"
+                  >
+                    {kit.preco}
+                  </button>
+                ) : (
+                  <span className="rounded-full border border-emerald-400/40 bg-emerald-500/10 px-4 py-2 text-sm font-semibold text-emerald-200">
+                    {kit.preco}
+                  </span>
+                )}
                 <a
                   href={kit.discordUrl}
                   target="_blank"
@@ -257,6 +323,33 @@ export default function Loja() {
             </div>
           </article>
         ))}
+      </section>
+
+      <section className="mt-8">
+        <h2 className="display-font text-xl text-slate-100 md:text-2xl">Compras Únicas</h2>
+        <p className="mt-2 text-slate-300">Produtos avulsos comprados separadamente dos kits.</p>
+
+        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {singleProducts.map((product) => {
+            const item = itemMap.get(product.itemId);
+            if (!item) {
+              return null;
+            }
+
+            return (
+              <button
+                key={product.id}
+                type="button"
+                onClick={() => setSelectedSingleProductId(product.id)}
+                className="rounded-2xl border border-slate-700 bg-slate-900/75 p-5 text-center transition hover:border-sky-400/60 hover:bg-slate-900"
+              >
+                <img src={item.imagem} alt={product.nome} className="mx-auto h-24 w-24 rounded-lg object-contain bg-slate-950/70 p-2" />
+                <p className="mt-3 whitespace-pre-line font-semibold text-slate-100">{formatCardProductName(product.nome)}</p>
+                <p className="mt-1 text-xs uppercase tracking-[0.14em] text-sky-300">Clique para ver detalhes</p>
+              </button>
+            );
+          })}
+        </div>
       </section>
 
       {selectedItem && selectedKit ? (
@@ -305,6 +398,117 @@ export default function Loja() {
                   )}
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {selectedSingleProduct && selectedSingleItem ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-4" onClick={closeModal}>
+          <div
+            role="dialog"
+            aria-modal="true"
+            className="w-full max-w-xl rounded-2xl border border-slate-700 bg-slate-900 p-5 shadow-2xl"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-xs uppercase tracking-[0.16em] text-sky-300">Compra Única</p>
+                <h3 className="display-font mt-1 text-lg text-slate-100 md:text-xl">{selectedSingleProduct.nome}</h3>
+                <p className="mt-2 text-sm text-slate-300">{selectedSingleItem.descricao}</p>
+              </div>
+              <button
+                type="button"
+                onClick={closeModal}
+                className="rounded-md border border-slate-600 px-2 py-1 text-xs text-slate-200 hover:border-slate-400"
+              >
+                Fechar
+              </button>
+            </div>
+
+            <div className="mt-4 grid gap-4 md:grid-cols-[160px_1fr]">
+              <img
+                src={selectedSingleItem.imagem}
+                alt={selectedSingleProduct.nome}
+                className="h-36 w-full rounded-lg bg-slate-950/80 object-contain p-2"
+              />
+              <div>
+                <p className="text-sm font-semibold text-emerald-200">Preço: {selectedSingleProduct.preco}</p>
+                <a
+                  href={selectedSingleProduct.discordUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-3 inline-flex rounded-lg border border-sky-400/40 bg-sky-500/15 px-4 py-2 text-sm font-semibold text-sky-100 transition hover:bg-sky-500/25"
+                >
+                  Comprar no Discord
+                </a>
+
+                <div className="mt-4">
+                  <p className="text-xs uppercase tracking-[0.16em] text-slate-400">Encantamentos</p>
+                  <ul className="mt-2 space-y-2">
+                    {selectedSingleItem.encantamentos.map((encantamento) => (
+                      <li
+                        key={`${selectedSingleProduct.id}-${encantamento.nome}-${encantamento.nivel}`}
+                        className="flex items-center gap-2 rounded bg-slate-950/75 px-3 py-2"
+                      >
+                        <img src={BOOK_ICON} alt="" className="h-5 w-5 object-contain" />
+                        <span className="text-sm text-slate-100">{encantamento.nome}</span>
+                        <span className="ml-auto rounded bg-sky-500/20 px-2 py-0.5 text-xs font-semibold text-sky-100">
+                          {encantamento.nivel}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {showInvocadorInfo ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-4" onClick={closeModal}>
+          <div
+            role="dialog"
+            aria-modal="true"
+            className="w-full max-w-xl rounded-2xl border border-slate-700 bg-slate-900 p-5 shadow-2xl"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-xs uppercase tracking-[0.16em] text-emerald-300">Kit Invocador</p>
+                <h3 className="display-font mt-1 text-lg text-slate-100 md:text-xl">Como obter e manter</h3>
+                <p className="mt-2 text-sm text-slate-300">
+                  O Kit Invocador é temporário e depende de divulgação ativa e presença no servidor.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={closeModal}
+                className="rounded-md border border-slate-600 px-2 py-1 text-xs text-slate-200 hover:border-slate-400"
+              >
+                Fechar
+              </button>
+            </div>
+
+            <div className="mt-4 space-y-3 text-sm text-slate-200">
+              <p className="rounded-lg border border-slate-700 bg-slate-950/70 px-4 py-3">
+                Divulgue o Discord e traga jogadores para entrarem no Discord e também no jogo.
+              </p>
+              <p className="rounded-lg border border-slate-700 bg-slate-950/70 px-4 py-3">
+                A cada 5 convites válidos, você ganha 5 dias de Kit Invocador.
+              </p>
+              <p className="rounded-lg border border-slate-700 bg-slate-950/70 px-4 py-3">
+                O kit não é permanente. Se ficar 1 dia sem entrar no servidor, na manhã seguinte perde 1 dia de kit.
+              </p>
+              <p className="rounded-lg border border-slate-700 bg-slate-950/70 px-4 py-3">
+                Para aumentar novamente, continue no ciclo 5+5+ (cada novo bloco de 5 convites soma mais 5 dias).
+              </p>
+            </div>
+
+            <div className="mt-4 rounded-lg border border-slate-700 bg-slate-950/70 p-4">
+              <p className="text-xs uppercase tracking-[0.16em] text-slate-400">Itens do Kit Invocador</p>
+              <p className="mt-2 text-sm text-slate-200">Mesmos itens do Kit Magna Essência.</p>
             </div>
           </div>
         </div>
